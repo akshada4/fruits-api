@@ -1,5 +1,12 @@
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List
 import json
+
+class NewData(BaseModel):
+	id: int
+	color: str
+	fruits: List[str]
 
 app = FastAPI()
 
@@ -21,6 +28,10 @@ def get_data(id: int):
 			return i
 
 	raise HTTPException(status_code=404, detail="item not found")
+
+@app.post("/create")
+def create_data(data: NewData):
+	return data
 
 
 if __name__ == "__main__":
