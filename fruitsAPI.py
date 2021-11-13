@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
 import json
+import uvicorn
+from databaseSetup import Setup
 
 class NewData(BaseModel):
 	id: int
@@ -29,10 +31,12 @@ def get_data(id: int):
 
 	raise HTTPException(status_code=404, detail="item not found")
 
-@app.post("/create")
-def create_data(data: NewData):
-	return data
-
+@app.post("/fruits")
+def create(newData: NewData):
+	setup = Setup()
+	data = {"id": newData.id, "color": newData.color, "fruits": newData.fruits}
+	setup.create_new(data)
+	return newData
 
 if __name__ == "__main__":
-	uvicorn.run("main:app")
+	uvicorn.run("fruitsAPI:app")
