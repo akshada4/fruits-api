@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import List
 import json
 import uvicorn
-from databaseSetup import Setup
+from databaseSetup import Operation
 
 class NewData(BaseModel):
 	id: int
@@ -11,6 +11,7 @@ class NewData(BaseModel):
 	fruits: List[str]
 
 app = FastAPI()
+operation = Operation()
 
 def read_json():
 	f = open('data.json')
@@ -18,7 +19,7 @@ def read_json():
 
 @app.get("/",status_code=200)
 def get_data():
-	data = read_json()
+	data = operation.get_all()
 	return data
 
 @app.get("/{id}",status_code=200)
@@ -33,9 +34,8 @@ def get_data(id: int):
 
 @app.post("/fruits")
 def create(newData: NewData):
-	setup = Setup()
 	data = {"id": newData.id, "color": newData.color, "fruits": newData.fruits}
-	setup.create_new(data)
+	operation.create_new(data)
 	return newData
 
 if __name__ == "__main__":
