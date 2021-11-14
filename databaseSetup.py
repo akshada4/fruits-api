@@ -34,12 +34,11 @@ class Operation(Setup):
     def create_new(self, data):
         [connect, cursor] = self.setup_connection() 
 
-        id = data["id"]
         color = data["color"]
         fruits = data["fruits"]
 
-        query = "INSERT INTO fruits (id, color, fruits) VALUES (%s, %s, %s);"
-        data = (id, color, fruits)
+        query = "INSERT INTO fruits (color, fruits) VALUES (%s, %s);"
+        data = (color, fruits)
         cursor.execute(query, data)
         connect.commit()
 
@@ -57,5 +56,6 @@ class Operation(Setup):
 
         json_data = self.convert_to_json(data)
         return json_data
+    
 
         

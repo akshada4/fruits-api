@@ -6,7 +6,6 @@ import uvicorn
 from databaseSetup import Operation
 
 class NewData(BaseModel):
-	id: int
 	color: str
 	fruits: List[str]
 
@@ -34,7 +33,7 @@ def get_data(id: int):
 
 @app.post("/fruits")
 def create(newData: NewData):
-	data = {"id": newData.id, "color": newData.color, "fruits": newData.fruits}
+	data = {"color": newData.color, "fruits": newData.fruits}
 	operation.create_new(data)
 	return newData
 
