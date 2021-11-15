@@ -12,10 +12,6 @@ class NewData(BaseModel):
 app = FastAPI()
 operation = Operation()
 
-def read_json():
-	f = open('data.json')
-	return json.load(f)
-
 @app.get("/",status_code=200)
 def get_data():
 	data = operation.get_all()
@@ -23,11 +19,10 @@ def get_data():
 
 @app.get("/{id}",status_code=200)
 def get_data(id: int):
-	data = read_json()
+	data = operation.get_by_id(id)
 
-	for i in data:
-		if i["id"] == id:
-			return i
+	if (data):
+		return data
 
 	raise HTTPException(status_code=404, detail="item not found")
 

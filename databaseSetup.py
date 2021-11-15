@@ -1,6 +1,7 @@
 import psycopg2
 import os
 from dotenv import load_dotenv
+from psycopg2 import sql
 
 class Setup():
     def __init__(self):
@@ -57,5 +58,20 @@ class Operation(Setup):
         json_data = self.convert_to_json(data)
         return json_data
     
+    def get_by_id(self, id):
+        [connect, cursor] = self.setup_connection()
+
+        try:
+            query = "SELECT * from fruits WHERE id = (%s);"
+            cursor.execute(query,(id,))
+            data = cursor.fetchone()
+            connect.commit()
+
+            self.close_connection(connect, cursor)
+            json_data = self.convert_to_json([data])[-1]
+            return json_data
+        except:
+            return None
+
 
         
