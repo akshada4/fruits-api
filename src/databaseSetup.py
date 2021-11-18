@@ -70,8 +70,4 @@ class Operation(Setup):
             self.close_connection(connect, cursor)
             return self.convert_to_json([data])[-1]
         except:
-           return None
-
-
-
-        
+           return None        
