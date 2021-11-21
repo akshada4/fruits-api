@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 import uvicorn
-from .databaseSetup import Operation
+from src.databaseSetup import Operation
 
 class NewData(BaseModel):
 	color: str
