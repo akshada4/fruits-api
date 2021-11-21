@@ -1,9 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
-import json
 import uvicorn
-from databaseSetup import Operation
+from .databaseSetup import Operation
 
 class NewData(BaseModel):
 	color: str
@@ -14,15 +13,15 @@ operation = Operation()
 
 @app.get("/",status_code=200)
 def get_data(color: Optional[str] = None):
-	if (color):
-		data = operation.get_data("color",color)
-		if (data):
-			return data
+	# if (color):
+	# 	data = operation.get_data("color",color)
+	# 	if (data):
+	# 		return data
 		
-		raise HTTPException(status_code=404, detail="item not found")
-	else:
-		data = operation.get_all()
-		return data
+	# 	raise HTTPException(status_code=404, detail="item not found")
+	# else:
+	# 	data = operation.get_all()
+		return {"item": "banana"}
 
 @app.get("/{id}",status_code=200)
 def get_data_by_id(id: int):
@@ -39,5 +38,5 @@ def create(newData: NewData):
 	operation.create_new(data)
 	return newData
 
-if __name__ == "__main__":
-	uvicorn.run("fruitsAPI:app", host="127.0.0.1", port=5000)
+# if __name__ == "__main__":
+# 	uvicorn.run("fruitsAPI:app", host="0.0.0.0", port=80)
