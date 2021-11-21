@@ -13,15 +13,15 @@ operation = Operation()
 
 @app.get("/",status_code=200)
 def get_data(color: Optional[str] = None):
-	# if (color):
-	# 	data = operation.get_data("color",color)
-	# 	if (data):
-	# 		return data
+	if (color):
+		data = operation.get_data("color",color)
+		if (data):
+			return data
 		
-	# 	raise HTTPException(status_code=404, detail="item not found")
-	# else:
-	# 	data = operation.get_all()
-		return {"item": "banana"}
+		raise HTTPException(status_code=404, detail="item not found")
+	else:
+		data = operation.get_all()
+		return data
 
 @app.get("/{id}",status_code=200)
 def get_data_by_id(id: int):
