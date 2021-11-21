@@ -1,9 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
-import json
 import uvicorn
-from databaseSetup import Operation
+from src.databaseSetup import Operation
 
 class NewData(BaseModel):
 	color: str
@@ -39,5 +38,5 @@ def create(newData: NewData):
 	operation.create_new(data)
 	return newData
 
-if __name__ == "__main__":
-	uvicorn.run("fruitsAPI:app", host="127.0.0.1", port=5000)
+# if __name__ == "__main__":
+# 	uvicorn.run("fruitsAPI:app", host="0.0.0.0", port=80)

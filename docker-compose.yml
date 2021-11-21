@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: postgres-db
+    image: postgres
+    restart: unless-stopped
+    ports: 
+      - 5431:5432
+    volumes:
+      - db_data:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${PASSWORD}
+      - POSTGRESS_DB=${DB_NAME}
+
+  apiapp:
+    container_name: api-app
+    build: .
+    restart: unless-stopped
+    ports: 
+      - 5000:5000
+    depends_on: 
+      - db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - PASSWORD=${PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - PORT=${PORT}
+      - SERVER=${SERVER}
+
+volumes:
+  db_data:
