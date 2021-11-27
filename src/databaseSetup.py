@@ -33,23 +33,22 @@ class Setup():
 
 class Operation(Setup):    
     def create_new(self, data):
-        [connect, cursor] = self.setup_connection() 
+        [connect, cursor] = self.setup_connection()
 
         color = data["color"]
         fruits = data["fruits"]
 
         data_exists = cursor.execute("SELECT EXISTS (SELECT 1 from fruits WHERE color = (%s));", (color,))
-        
+
         if (not data_exists):
             query = "INSERT INTO fruits (color, fruits) VALUES (%s, %s);"
             posted_data = (color, fruits)
             cursor.execute(query, posted_data)
             connect.commit()
-            return data
-        else:
-            return {"err": "color exists"}
 
+        returned_data = data if not data_exists else  {"err": "color already exists"}
         self.close_connection(connect, cursor)
+        return returned_data
 
     def get_all(self):
         [connect, cursor] = self.setup_connection()
@@ -70,7 +69,6 @@ class Operation(Setup):
         try:
             cursor.execute(query,(parameter,))
             data = cursor.fetchone()
-
             self.close_connection(connect, cursor)
             return self.convert_to_json([data])[-1]
         except:
