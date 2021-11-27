@@ -8,6 +8,9 @@ class NewData(BaseModel):
 	color: str
 	fruits: List[str]
 
+class UpdateData(BaseModel):
+	fruits: List[str]
+
 app = FastAPI()
 operation = Operation()
 
@@ -35,8 +38,13 @@ def get_data_by_id(id: int):
 @app.post("/fruits")
 def create(newData: NewData):
 	data = {"color": newData.color, "fruits": newData.fruits}
-	operation.create_new(data)
-	return newData
+	return operation.create_new(data)
+
+@app.put("/update-fruits/{color}")
+def update(updatedData: UpdateData, color: str):
+	data = {"color": color, "fruits": updatedData.fruits}
+	print(data)
+	return operation.put_data(color, updatedData.fruits)
 
 # if __name__ == "__main__":
-# 	uvicorn.run("fruitsAPI:app", host="0.0.0.0", port=80)
+# 	uvicorn.run("fruitsAPI:app", host="0.0.0.0", port=5000, reload=True)

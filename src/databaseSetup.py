@@ -38,10 +38,17 @@ class Operation(Setup):
         color = data["color"]
         fruits = data["fruits"]
 
-        query = "INSERT INTO fruits (color, fruits) VALUES (%s, %s);"
-        data = (color, fruits)
-        cursor.execute(query, data)
-        connect.commit()
+        fetch_data = cursor.execute("SELECT EXISTS (SELECT 1 from fruits WHERE color = (%s));", (color,))
+        data_exists = cursor.fetchone()[0]
+
+        if (not data_exists):
+            query = "INSERT INTO fruits (color, fruits) VALUES (%s, %s);"
+            posted_data = (color, fruits)
+            cursor.execute(query, posted_data)
+            connect.commit()
+            return data
+        else:
+            return {"err": "color exists"}
 
         self.close_connection(connect, cursor)
 
@@ -70,4 +77,18 @@ class Operation(Setup):
             self.close_connection(connect, cursor)
             return self.convert_to_json([data])[-1]
         except:
-           return None        
+           return None  
+
+    def put_data(self, color, data):
+        [connect, cursor] = self.setup_connection()
+        update_query = "UPDATE fruits SET fruits = fruits || (%s) WHERE color = (%s)"
+        cursor.execute(update_query,(data,color))
+        connect.commit()
+        
+        fetch_query = cursor.execute("SELECT * from fruits WHERE color = (%s);", (color,))
+        updated_entry = cursor.fetchone()
+        connect.commit()
+        self.close_connection(connect, cursor)
+
+        json_data = self.convert_to_json([updated_entry])[-1]
+        return  json_data
