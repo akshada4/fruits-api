@@ -40,7 +40,7 @@ class Operation(Setup):
 
         data_exists = cursor.execute("SELECT EXISTS (SELECT 1 from fruits WHERE color = (%s));", (color,))
         
-        if (not fetch_data):
+        if (not data_exists):
             query = "INSERT INTO fruits (color, fruits) VALUES (%s, %s);"
             posted_data = (color, fruits)
             cursor.execute(query, posted_data)
