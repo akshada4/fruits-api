@@ -38,10 +38,9 @@ class Operation(Setup):
         color = data["color"]
         fruits = data["fruits"]
 
-        fetch_data = cursor.execute("SELECT EXISTS (SELECT 1 from fruits WHERE color = (%s));", (color,))
-        data_exists = cursor.fetchone()[0]
-
-        if (not data_exists):
+        data_exists = cursor.execute("SELECT EXISTS (SELECT 1 from fruits WHERE color = (%s));", (color,))
+        
+        if (not fetch_data):
             query = "INSERT INTO fruits (color, fruits) VALUES (%s, %s);"
             posted_data = (color, fruits)
             cursor.execute(query, posted_data)
@@ -58,7 +57,6 @@ class Operation(Setup):
         query = "SELECT * from fruits;"
         cursor.execute(query)
         data = cursor.fetchall()
-        connect.commit()
 
         self.close_connection(connect, cursor)
 
@@ -72,7 +70,6 @@ class Operation(Setup):
         try:
             cursor.execute(query,(parameter,))
             data = cursor.fetchone()
-            connect.commit()
 
             self.close_connection(connect, cursor)
             return self.convert_to_json([data])[-1]
@@ -83,11 +80,11 @@ class Operation(Setup):
         [connect, cursor] = self.setup_connection()
         update_query = "UPDATE fruits SET fruits = fruits || (%s) WHERE color = (%s)"
         cursor.execute(update_query,(data,color))
+        connect.commit()
         
         fetch_query = cursor.execute("SELECT * from fruits WHERE color = (%s);", (color,))
         updated_entry = cursor.fetchone()
         
-        connect.commit()
         self.close_connection(connect, cursor)
 
         json_data = self.convert_to_json([updated_entry])[-1]
