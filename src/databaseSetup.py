@@ -83,10 +83,10 @@ class Operation(Setup):
         [connect, cursor] = self.setup_connection()
         update_query = "UPDATE fruits SET fruits = fruits || (%s) WHERE color = (%s)"
         cursor.execute(update_query,(data,color))
-        connect.commit()
         
         fetch_query = cursor.execute("SELECT * from fruits WHERE color = (%s);", (color,))
         updated_entry = cursor.fetchone()
+        
         connect.commit()
         self.close_connection(connect, cursor)
 

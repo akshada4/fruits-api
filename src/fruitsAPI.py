@@ -43,7 +43,6 @@ def create(newData: NewData):
 @app.put("/update-fruits/{color}")
 def update(updatedData: UpdateData, color: str):
 	data = {"color": color, "fruits": updatedData.fruits}
-	print(data)
 	return operation.put_data(color, updatedData.fruits)
 
 # if __name__ == "__main__":
